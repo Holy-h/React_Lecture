@@ -10,16 +10,13 @@
     <!--   -->
     <script type="text/babel">
       class GuGuDan extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            answer: "",
-            value: "",
-            result: ""
-          };
-        }
+        state = {
+          first: Math.ceil(Math.random() * 9),
+          second: Math.ceil(Math.random() * 9),
+          answer: "",
+          value: "",
+          result: ""
+        };
 
         onSubmit = e => {
           e.preventDefault();
@@ -34,7 +31,8 @@
           } else {
             this.setState({
               result: "오답!!",
-              value: ""
+              value: "",
+              answer: ""
             });
           }
         };
@@ -42,7 +40,7 @@
         onChange = e => this.setState({ value: e.target.value });
         render() {
           return (
-            <div>
+            <React.Fragment>
               <div>
                 {this.state.first} 곱하기 {this.state.second}는?
               </div>
@@ -54,10 +52,11 @@
                   // input.onchange = (e) => {console.log(e.target.value)}
                   // input에 들어가는 내용은 변하는 것이기에 state고 state라서 변화를 주는 방식이 기존과 다른 것임
                 />
-                <button>입력</button>
+                <button type="submit">입력</button>
               </form>
-              <div>정답: {this.state.answer}</div>
-            </div>
+              <div>{this.state.result}</div>
+              <div>이전 정답: {this.state.answer}</div>
+            </React.Fragment>
           );
         }
       }
@@ -65,8 +64,6 @@
     <script type="text/babel">
       ReactDOM.render(
         <div>
-          <GuGuDan />
-          <GuGuDan />
           <GuGuDan />
         </div>,
         document.querySelector("#root")
