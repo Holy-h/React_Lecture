@@ -9,14 +9,13 @@
       crossorigin
       src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
     ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <!--  <div id="root"><button>Love</button></div> -->
-    <script>
-      const e = React.createElement;
-
-      class LoveBtn extends React.Component {
+    <!--  <div id="root"><button>Like</button></div> -->
+    <script type="text/babel">
+      class LikeButton extends React.Component {
         constructor(props) {
           super(props);
           this.state = {
@@ -26,24 +25,33 @@
         }
 
         render() {
-          return e(
-            "button",
-            {
-              onClick: () => {
-                this.state.liked === true
+          return (
+            <button
+              onClick={() => {
+                this.state.liked
                   ? this.setState({ liked: false })
                   : this.setState({ liked: true });
-              },
-              type: "submit"
-            },
-            this.state.liked === true ? "Liked" : "Like"
+              }}
+              type="submit"
+            >
+              {this.state.liked ? "Liked" : "Like"}
+            </button>
+            // JSX (JS + XML)
           );
           // <button onClick="onclick" type: "submit">Love</button> 이 태그를 만드는 설계도
         }
       }
     </script>
-    <script>
-      ReactDOM.render(e(LoveBtn), document.querySelector("#root")); // 설계도를 구현(렌더)
+    <script type="text/babel">
+      ReactDOM.render(
+        <div>
+          <LikeButton />
+          <LikeButton />
+          <LikeButton />
+          <LikeButton />
+        </div>,
+        document.querySelector("#root")
+      ); // 설계도를 구현(렌더)
     </script>
   </body>
 </html>
