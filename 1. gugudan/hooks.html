@@ -14,21 +14,6 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      // function Counter({ initialCount }) {
-      //   const [count, setCount] = useState(initialCount);
-      //   return (
-      //     <div>
-      //       Count: {count}
-      //       <button onClick={() => setCount(initialCount)}>Reset</button>
-      //       <button onClick={() => setCount(prevCount => prevCount + 1)}>
-      //         +
-      //       </button>
-      //       <button onClick={() => setCount(prevCount => prevCount - 1)}>
-      //         -
-      //       </button>
-      //     </div>
-      //   );
-      // }
       const GuGuDan = () => {
         const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
         const [second, setSecond] = React.useState(
@@ -47,10 +32,13 @@
               correct;
             }
             setResult("정답");
-            setAnswer(value);
+            setValue(prevValue => {
+              setAnswer(prevValue);
+              return "";
+            });
+            // setAnswer(value);
             setFirst(Math.ceil(Math.random() * 9));
             setSecond(Math.ceil(Math.random() * 9));
-            setValue("");
             setCorrect(prevCorrect => prevCorrect + 1);
           } else {
             setResult("오답!");
@@ -62,7 +50,7 @@
         const onChangeInput = e => {
           setValue(e.target.value);
         };
-
+        // console.log("랜더링 함수는 언제 실행되나");
         return (
           <React.Fragment>
             <div>
