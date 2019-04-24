@@ -9,11 +9,24 @@ const config = {
   },
 
   entry: {
-    app: "./client.jsx"
+    app: path.join(__dirname, "2_wordrelay", "client")
   }, // 입력
 
+  module: {
+    rules: [
+      {
+        test: /\.jsx?/,
+        loader: "babel-loader",
+        options: {
+          presets: ["@babel/preset-env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-proposal-class-properties"]
+        }
+      }
+    ]
+  },
+
   output: {
-    path: path.join(__dirname, "dist"), // __dirname(현재 폴더) + /dist
+    path: path.join(__dirname, "2_wordrelay", "dist"), // __dirname(현재 폴더) + /dist
     filename: "app.js"
   } // 출력
 };
