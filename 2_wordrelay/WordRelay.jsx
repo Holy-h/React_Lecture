@@ -3,7 +3,7 @@ const { Component } = require("react");
 
 class WordRelay extends Component {
   state = {
-    word: "자전거",
+    word: "클릭이요",
     value: "",
     result: ""
   };
@@ -50,7 +50,7 @@ class WordRelay extends Component {
             type="text"
             placeholder="입력하세요"
           />
-          <button type="submit">제출</button>
+          <button type="submit">클릭</button>
         </form>
         {this.state.result}
       </>

@@ -30,7 +30,7 @@ const config = {
             ],
             ["@babel/preset-react"]
           ],
-          plugins: ["@babel/plugin-proposal-class-properties"]
+          plugins: ["@babel/plugin-proposal-class-properties", "react-hot-loader/babel"]
         }
       }
     ]
@@ -38,7 +38,8 @@ const config = {
 
   output: {
     path: path.join(__dirname, "dist"), // __dirname(현재 폴더) + /dist
-    filename: "[name].js"
+    filename: "[name].js",
+    publicPath: "/dist/" // webpack-dev-server 설정(가상 경로 express.static)
   } // 출력
 };
 
