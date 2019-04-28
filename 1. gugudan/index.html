@@ -1,85 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>끝말잇기</title>
   </head>
   <body>
     <div id="root"></div>
-    <!--   -->
-    <script type="text/babel">
-      class GuGuDan extends React.Component {
-        state = {
-          first: Math.ceil(Math.random() * 9),
-          second: Math.ceil(Math.random() * 9),
-          answer: "",
-          value: "",
-          result: "",
-          correct: 0
-        };
-
-        onSubmit = e => {
-          e.preventDefault();
-          if (parseInt(this.state.value) === this.state.first * this.state.second) {
-            this.setState(prevState => {
-              return {
-                result: "정답",
-                answer: prevState.value,
-                first: Math.ceil(Math.random() * 9),
-                second: Math.ceil(Math.random() * 9),
-                value: "",
-                correct: prevState.correct + 1
-              };
-            });
-          } else {
-            this.setState({
-              result: "오답!!",
-              value: "",
-              answer: ""
-            });
-          }
-          this.input.focus();
-        };
-
-        onChange = e => this.setState({ value: e.target.value });
-
-        onRefInput = c => (this.input = c);
-        input;
-
-        render() {
-          console.log("랜더링 함수는 언제 실행되나");
-          return (
-            <React.Fragment>
-              <div>
-                {this.state.first} 곱하기 {this.state.second}는?
-              </div>
-              <form onSubmit={this.onSubmit}>
-                <input
-                  ref={this.onRefInput}
-                  type="number"
-                  value={this.state.value}
-                  onChange={this.onChange}
-                  // input.onchange = (e) => {console.log(e.target.value)}
-                  // input에 들어가는 내용은 변하는 것이기에 state고 state라서 변화를 주는 방식이 기존과 다른 것임
-                />
-                <button type="submit">입력</button>
-              </form>
-              <div>{this.state.result}</div>
-              <div>정답 횟수: {this.state.correct}</div>
-              <div>이전 정답: {this.state.answer}</div>
-            </React.Fragment>
-          );
-        }
-      }
-    </script>
-    <script type="text/babel">
-      ReactDOM.render(
-        <div>
-          <GuGuDan />
-        </div>,
-        document.querySelector("#root")
-      ); // 설계도를 구현(렌더)
-    </script>
+    <script src="./dist/app.js"></script>
   </body>
 </html>
