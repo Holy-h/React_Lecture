@@ -1,61 +1,40 @@
 const React = require("react");
-const { Component } = require("react");
+const { useState, useRef } = React;
 
-class WordRelay extends Component {
-  state = {
-    word: "클릭이요",
-    value: "",
-    result: ""
-  };
+const WordRelay = () => {
+  const [word, setWord] = useState("꽁치");
+  const [value, setValue] = useState("");
+  const [result, setResult] = useState("");
+  const inputRef = useRef(null);
 
-  onSubmitForm = e => {
+  const onSubmitForm = e => {
     e.preventDefault();
-    if (this.state.word[this.state.word.length - 1] === this.state.value[0]) {
-      this.setState(prevState => {
-        return {
-          result: "정답",
-          word: prevState.value,
-          value: ""
-        };
-      });
+    if (word[word.length - 1] === value[0]) {
+      setResult("정답");
+      setWord(value);
+      setValue("");
     } else {
-      this.setState({
-        result: "틀렸어요!"
-      });
+      setResult("틀렸음!");
+      setValue("");
     }
-    this.input.focus();
+    inputRef.current.focus();
   };
 
-  onChangeInput = e => {
-    this.setState({
-      value: e.target.value
-    });
+  const onChangeInput = e => {
+    setValue(e.target.value);
   };
 
-  input;
-
-  onRefInput = c => {
-    this.input = c;
-  };
-
-  render() {
-    return (
-      <>
-        {this.state.word}
-        <form onSubmit={this.onSubmitForm}>
-          <input
-            ref={this.onRefInput}
-            value={this.state.value}
-            onChange={this.onChangeInput}
-            type="text"
-            placeholder="입력하세요"
-          />
-          <button type="submit">클릭</button>
-        </form>
-        {this.state.result}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div>제시어: {word}</div>
+      <form onSubmit={onSubmitForm}>
+        <label htmlFor="wordInput">입력</label>
+        <input id="wordInput" className="wordInput" ref={inputRef} type="text" value={value} onChange={onChangeInput} />
+        <button type="submit">클릭</button>
+      </form>
+      <div>{result}</div>
+    </>
+  );
+};
 
 module.exports = WordRelay;
