@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 const config = {
   mode: "development", // production
@@ -15,12 +16,24 @@ const config = {
         test: /\.jsx?/,
         loader: "babel-loader",
         options: {
-          presets: ["@babel/preset-env", "@babel/preset-react"],
+          presets: [
+            [
+              "@babel/preset-env",
+              {
+                targets: {
+                  browsers: ["> 1% in KR"] // browserslist
+                },
+                debug: true
+              }
+            ],
+            ["@babel/preset-react"]
+          ],
           plugins: []
         }
       }
     ]
   },
+  // plugins: [new webpack.LoaderOptionsPlugin({ debug: true })],
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "dist")
