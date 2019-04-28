@@ -9,7 +9,7 @@ const config = {
   },
 
   entry: {
-    app: path.join(__dirname, "2_wordrelay", "client")
+    app: "./client"
   }, // 입력
 
   module: {
@@ -18,7 +18,18 @@ const config = {
         test: /\.jsx?/,
         loader: "babel-loader",
         options: {
-          presets: ["@babel/preset-env", "@babel/preset-react"],
+          presets: [
+            [
+              "@babel/preset-env",
+              {
+                targets: {
+                  browsers: ["> 1% in KR"] // browserslist
+                },
+                debug: true
+              }
+            ],
+            ["@babel/preset-react"]
+          ],
           plugins: ["@babel/plugin-proposal-class-properties"]
         }
       }
@@ -26,8 +37,8 @@ const config = {
   },
 
   output: {
-    path: path.join(__dirname, "2_wordrelay", "dist"), // __dirname(현재 폴더) + /dist
-    filename: "app.js"
+    path: path.join(__dirname, "dist"), // __dirname(현재 폴더) + /dist
+    filename: "[name].js"
   } // 출력
 };
 
