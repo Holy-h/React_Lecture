@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import Try from "./Try";
 
 function getNumbers() {
@@ -12,7 +12,7 @@ function getNumbers() {
   return array;
 }
 
-const NumberBaseball = () => {
+const NumberBaseball = memo(() => {
   const [result, setResult] = useState("");
   const [value, setValue] = useState(""); // input
   const [answer, setAnswer] = useState(getNumbers());
@@ -38,7 +38,6 @@ const NumberBaseball = () => {
 
       alert("게임을 다시 시작합니다");
 
-      setResult("");
       setValue("");
       setAnswer(getNumbers());
       setTries([]);
@@ -53,7 +52,6 @@ const NumberBaseball = () => {
 
         alert("게임을 다시 시작합니다");
 
-        setResult("");
         setValue("");
         setAnswer(getNumbers());
         setTries([]);
@@ -85,7 +83,6 @@ const NumberBaseball = () => {
   };
 
   const onChangeInput = e => {
-    console.log(answer);
     setValue(e.target.value);
   };
 
@@ -105,6 +102,6 @@ const NumberBaseball = () => {
       </ul>
     </>
   );
-};
+});
 
 export default NumberBaseball;
