@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useRef, useState, memo } from "react";
 import Try from "./Try";
 
 function getNumbers() {
@@ -17,6 +17,7 @@ const NumberBaseball = memo(() => {
   const [value, setValue] = useState(""); // input
   const [answer, setAnswer] = useState(getNumbers());
   const [tries, setTries] = useState([]); // push 쓰면 안됨
+  const inputRef = useRef(null);
 
   const onSubmitForm = e => {
     e.preventDefault();
@@ -80,6 +81,7 @@ const NumberBaseball = memo(() => {
         setValue("");
       }
     }
+    inputRef.current.focus();
   };
 
   const onChangeInput = e => {
@@ -90,7 +92,7 @@ const NumberBaseball = memo(() => {
     <>
       <h1>{result}</h1>
       <form onSubmit={onSubmitForm}>
-        <input maxLength={4} value={value} onChange={onChangeInput} />
+        <input ref={inputRef} maxLength={4} value={value} onChange={onChangeInput} />
         <button>입력</button>
       </form>
       <div>시도: {tries.length}</div>
