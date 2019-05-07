@@ -1,7 +1,7 @@
 const path = require("path");
 
 const config = {
-  name: "numberbaseball-setting",
+  name: "lecture",
   mode: "development", // 실서비스: production
   devtool: "eval",
   resolve: {
