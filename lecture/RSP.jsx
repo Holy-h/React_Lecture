@@ -12,9 +12,15 @@ const rspCoords = {
 };
 
 const scores = {
-  가위: 1,
-  바위: 0,
+  바위: 1,
+  가위: 0,
   보: -1
+};
+
+const computerChoise = imgCoord => {
+  return Object.entries(rspCoords).find(function(v) {
+    return v[1] === imgCoord;
+  })[0];
 };
 
 class RSP extends Component {
@@ -27,35 +33,65 @@ class RSP extends Component {
   interval; // setInterval을 다룰 수 있도록 핸들러 사용
 
   componentDidMount() {
-    this.interval = setInterval(() => {
-      const { imgCoord } = this.state;
-      console.log("ComponentDidMount", imgCoord, rspCoords.가위);
-      if (imgCoord === rspCoords.바위) {
-        this.setState({
-          imgCoord: rspCoords.가위
-        });
-      } else if (imgCoord === rspCoords.가위) {
-        console.log("setState");
-        this.setState({
-          imgCoord: rspCoords.보
-        });
-      } else if (imgCoord === rspCoords.보) {
-        this.setState({
-          imgCoord: rspCoords.바위
-        });
-      }
-    }, 1000);
+    this.interval = setInterval(this.changeHand, 100);
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate() {
+    console.log(this.state);
+  }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  onClickBtn = () => {
+  changeHand = () => {
+    const { imgCoord } = this.state;
+    console.log("ComponentDidMount", imgCoord, rspCoords.가위);
+    if (imgCoord === rspCoords.바위) {
+      this.setState({
+        imgCoord: rspCoords.가위
+      });
+    } else if (imgCoord === rspCoords.가위) {
+      console.log("setState");
+      this.setState({
+        imgCoord: rspCoords.보
+      });
+    } else if (imgCoord === rspCoords.보) {
+      this.setState({
+        imgCoord: rspCoords.바위
+      });
+    }
+  };
+
+  onClickBtn = choice => {
+    const { imgCoord } = this.state;
     clearInterval(this.interval);
     console.log("click");
+    const myScore = scores[choice];
+    const cpuScore = scores[computerChoise(imgCoord)];
+    const calScore = myScore - cpuScore;
+    if (calScore === 0) {
+      this.setState({
+        result: "draw"
+      });
+    } else if ([1, -2].includes(calScore)) {
+      this.setState(prevState => {
+        return {
+          result: "win",
+          score: prevState.score + 1
+        };
+      });
+    } else if ([-1, 2].includes(calScore)) {
+      this.setState(prevState => {
+        return {
+          result: "lose",
+          score: prevState.score - 1
+        };
+      });
+    }
+    setTimeout(() => {
+      this.interval = setInterval(this.changeHand, 100);
+    }, 2000);
   };
 
   render() {
@@ -91,6 +127,8 @@ class RSP extends Component {
             보
           </button>
         </div>
+        <div>{result}</div>
+        <div>현재 당신의 점수는: {score}점 입니다.</div>
       </>
     );
   }
