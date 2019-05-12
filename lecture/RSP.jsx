@@ -1,9 +1,4 @@
-import React, { Component } from "react";
-
-// 클래스의 경우
-// comstructor -> render -> ref -> componentDidMount
-// (setState/props 변경) -> shouldComponentUpdate -> render -> componentDidUpdate
-//(부모 Component가 자식 Component를 없앨 때) -> componentWillUnmount -> render
+import React, { useRef, useState, useEffect, memo } from "react";
 
 const rspCoords = {
   바위: "0",
@@ -23,115 +18,80 @@ const computerChoise = imgCoord => {
   })[0];
 };
 
-class RSP extends Component {
-  state = {
-    result: "",
-    score: 0,
-    imgCoord: "0"
-  };
+const RSP = memo(() => {
+  const [result, setResult] = useState("");
+  const [score, setScore] = useState(0);
+  const [imgCoord, setImgCoord] = useState(rspCoords.바위);
 
-  interval; // setInterval을 다룰 수 있도록 핸들러 사용
+  const interval = useRef(); // setInterval 핸들러
 
-  componentDidMount() {
-    this.interval = setInterval(this.changeHand, 100);
-  }
+  useEffect(() => {
+    // componentDidMount, componentDidUpdate 역할(완벽하게 같은 건 아님)
+    console.log("시작");
+    interval.current = setInterval(changeHand, 100);
+    // console.log(result, score, imgCoord);
+    return () => {
+      // componentWillUnmount 역할
+      clearInterval(interval.current);
+      console.log("끝");
+    };
+  }, [imgCoord]);
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  changeHand = () => {
-    const { imgCoord } = this.state;
-    console.log("ComponentDidMount", imgCoord, rspCoords.가위);
+  const changeHand = () => {
     if (imgCoord === rspCoords.바위) {
-      this.setState({
-        imgCoord: rspCoords.가위
-      });
+      setImgCoord(rspCoords.가위);
     } else if (imgCoord === rspCoords.가위) {
-      console.log("setState");
-      this.setState({
-        imgCoord: rspCoords.보
-      });
+      setImgCoord(rspCoords.보);
     } else if (imgCoord === rspCoords.보) {
-      this.setState({
-        imgCoord: rspCoords.바위
-      });
+      setImgCoord(rspCoords.바위);
     }
   };
 
-  onClickBtn = choice => {
-    const { imgCoord } = this.state;
-    clearInterval(this.interval);
+  const onClickBtn = choice => e => {
+    clearInterval(interval.current);
     console.log("click");
+    console.log(e.target);
+    console.log(choice);
     const myScore = scores[choice];
     const cpuScore = scores[computerChoise(imgCoord)];
     const calScore = myScore - cpuScore;
     if (calScore === 0) {
-      this.setState({
-        result: "draw"
-      });
+      setResult("draw");
     } else if ([1, -2].includes(calScore)) {
-      this.setState(prevState => {
-        return {
-          result: "win",
-          score: prevState.score + 1
-        };
-      });
+      setResult("win");
+      setScore(prevScore => prevScore + 1);
     } else if ([-1, 2].includes(calScore)) {
-      this.setState(prevState => {
-        return {
-          result: "lose",
-          score: prevState.score - 1
-        };
-      });
+      setResult("lose");
+      setScore(prevScore => prevScore - 1);
     }
     setTimeout(() => {
-      this.interval = setInterval(this.changeHand, 100);
-    }, 2000);
+      interval.current = setInterval(changeHand, 100);
+    }, 1000);
   };
 
-  render() {
-    const { result, score, imgCoord } = this.state;
-    return (
-      <>
-        <div
-          id="computer"
-          style={{
-            background: `url(https://data.ac-illust.com/data/thumbnails/96/967fe28683728ebbbc0909a568251119_t.jpeg) ${imgCoord} 0`
-          }}
-        />
-        <div>
-          <button
-            id="rock"
-            className="btn"
-            onClick={() => this.onClickBtn("바위")}
-          >
-            바위
-          </button>
-          <button
-            id="scissor"
-            className="btn"
-            onClick={() => this.onClickBtn("가위")}
-          >
-            가위
-          </button>
-          <button
-            id="paper"
-            className="btn"
-            onClick={() => this.onClickBtn("보")}
-          >
-            보
-          </button>
-        </div>
-        <div>{result}</div>
-        <div>현재 당신의 점수는: {score}점 입니다.</div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div
+        id="computer"
+        style={{
+          background: `url(https://data.ac-illust.com/data/thumbnails/96/967fe28683728ebbbc0909a568251119_t.jpeg) ${imgCoord} 0`
+        }}
+      />
+      <div>
+        <button id="rock" className="btn" onClick={onClickBtn("바위")}>
+          바위
+        </button>
+        <button id="scissor" className="btn" onClick={onClickBtn("가위")}>
+          가위
+        </button>
+        <button id="paper" className="btn" onClick={onClickBtn("보")}>
+          보
+        </button>
+      </div>
+      <div>{result}</div>
+      <div>현재 당신의 점수는: {score}점 입니다.</div>
+    </>
+  );
+});
 
 export default RSP;
