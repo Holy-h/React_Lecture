@@ -27,7 +27,16 @@ class Lotto extends Component {
 
   timeouts = [];
 
-  componentDidMount() {
+  startLotto = () => {
+    console.log("startLotto!");
+    // 기존 state 초기화
+    this.setState({
+      winNumbers: getWinNumbers(),
+      winBalls: [],
+      bonus: null,
+      redo: false
+    });
+    this.timeouts = [];
     const { winNumbers } = this.state;
     for (let i = 0; i < winNumbers.length - 1; i++) {
       this.timeouts[i] = setTimeout(() => {
@@ -44,6 +53,10 @@ class Lotto extends Component {
         redo: true
       });
     }, 7000);
+  };
+
+  componentDidMount() {
+    this.startLotto();
   }
 
   // Timeout 정리 (메모리 누수 방지)
@@ -53,7 +66,9 @@ class Lotto extends Component {
     });
   }
 
-  onClickRedo = () => {};
+  onClickRedo = () => {
+    this.startLotto();
+  };
 
   render() {
     const { winBalls, bonus, redo } = this.state;
