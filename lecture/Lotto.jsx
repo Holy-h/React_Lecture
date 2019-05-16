@@ -1,5 +1,5 @@
 import React, { Component, memo } from "react";
-import "./Ball";
+import Ball from "./Ball";
 
 function getWinNumbers() {
   console.log("getNumbers");
@@ -17,30 +17,6 @@ function getWinNumbers() {
   return [...winNumbers, bonusNumber];
 }
 
-// Hooks가 아닙니다 (useEffect, useState 등이 사용되지 않았기 때문)
-// 함수형 컴포넌트 입니다
-// const Ball = memo(({ number }) => {
-//   let background;
-//   if (number <= 10) {
-//     background = "red";
-//   } else if (number <= 20) {
-//     background = "orange";
-//   } else if (number <= 30) {
-//     background = "yellow";
-//   } else if (number <= 40) {
-//     background = "blue";
-//   } else {
-//     background = "green";
-//   }
-//   return (
-//     <>
-//       <div className="ball" style={{ background }}>
-//         {number}
-//       </div>
-//     </>
-//   );
-// });
-
 class Lotto extends Component {
   state = {
     winNumbers: getWinNumbers(), // 당첨 숫자
@@ -48,6 +24,37 @@ class Lotto extends Component {
     bonus: null, // 보너스
     redo: false
   };
+
+  timeouts = [];
+
+  componentDidMount() {
+    const { winNumbers } = this.state;
+    for (let i = 0; i < winNumbers.length - 1; i++) {
+      this.timeouts[i] = setTimeout(() => {
+        this.setState(prevState => {
+          return {
+            winBalls: [...prevState.winBalls, winNumbers[i]]
+          };
+        });
+      }, (i + 1) * 1000);
+    }
+    this.timeouts[6] = setTimeout(() => {
+      this.setState({
+        bonus: winNumbers[6],
+        redo: true
+      });
+    }, 7000);
+  }
+
+  // Timeout 정리 (메모리 누수 방지)
+  componentWillUnmount() {
+    this.timeouts.forEach(v => {
+      clearTimeout(v);
+    });
+  }
+
+  onClickRedo = () => {};
+
   render() {
     const { winBalls, bonus, redo } = this.state;
     return (
@@ -60,7 +67,7 @@ class Lotto extends Component {
         </div>
         <div>보너스 숫자</div>
         {bonus && <Ball number={bonus} />}
-        <button onClick={redo ? onClickRedo : () => {}}>한번 더!</button>
+        {redo && <button onClick={this.onClickRedo}>한번 더!</button>}
       </>
     );
   }
