@@ -28,15 +28,7 @@ class Lotto extends Component {
   timeouts = [];
 
   startLotto = () => {
-    console.log("startLotto!");
-    // 기존 state 초기화
-    this.setState({
-      winNumbers: getWinNumbers(),
-      winBalls: [],
-      bonus: null,
-      redo: false
-    });
-    this.timeouts = [];
+    console.log("startLotto");
     const { winNumbers } = this.state;
     for (let i = 0; i < winNumbers.length - 1; i++) {
       this.timeouts[i] = setTimeout(() => {
@@ -50,28 +42,48 @@ class Lotto extends Component {
     this.timeouts[6] = setTimeout(() => {
       this.setState({
         bonus: winNumbers[6],
-        redo: true
+        redo: false
       });
     }, 7000);
   };
 
   componentDidMount() {
+    console.log("componentDidMount");
     this.startLotto();
   }
 
   // Timeout 정리 (메모리 누수 방지)
   componentWillUnmount() {
+    console.log("componentWillUnmount");
     this.timeouts.forEach(v => {
       clearTimeout(v);
     });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redo) {
+      this.setState({
+        redo: false
+      });
+      this.timeouts = [];
+      console.log("componentDidUpdate");
+      this.startLotto();
+    }
+  }
+
   onClickRedo = () => {
-    this.startLotto();
+    console.log("onClickRedo");
+    this.setState({
+      winNumbers: getWinNumbers(),
+      winBalls: [],
+      bonus: null,
+      redo: true
+    });
+    this.timeouts = [];
   };
 
   render() {
-    const { winBalls, bonus, redo } = this.state;
+    const { winBalls, bonus } = this.state;
     return (
       <>
         <div>당첨 숫자</div>
@@ -82,7 +94,7 @@ class Lotto extends Component {
         </div>
         <div>보너스 숫자</div>
         {bonus && <Ball number={bonus} />}
-        {redo && <button onClick={this.onClickRedo}>한번 더!</button>}
+        {bonus && <button onClick={this.onClickRedo}>한번 더!</button>}
       </>
     );
   }
