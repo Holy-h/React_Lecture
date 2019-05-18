@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback
+} from "react";
 import Ball from "./Ball";
 
 function getWinNumbers() {
@@ -18,14 +24,14 @@ function getWinNumbers() {
 }
 
 const Lotto = () => {
-  const [winNumbers, setWinNumbers] = useState(getWinNumbers()); // 추첨 숫자(당첨 숫자 + 보너스)
+  const lottoNumbers = useMemo(() => getWinNumbers(), []);
+  const [winNumbers, setWinNumbers] = useState(lottoNumbers); // 추첨 숫자(당첨 숫자 + 보너스)
   const [winBalls, setWinBalls] = useState([]); // 당첨 숫자
   const [bonus, setBonus] = useState(null); // 보너스
   const [redo, setRedo] = useState(false); // 다시 시작 버튼 클릭
-
   const timeouts = useRef([]);
 
-  const startLotto = () => {
+  const startLotto = useCallback(() => {
     console.log("startLotto");
     for (let i = 0; i < winNumbers.length - 1; i++) {
       timeouts.current[i] = setTimeout(() => {
@@ -34,9 +40,8 @@ const Lotto = () => {
     }
     timeouts.current[6] = setTimeout(() => {
       setBonus(winNumbers[6]);
-      setRedo(false);
     }, 7000);
-  };
+  }, [winNumbers]);
 
   useEffect(() => {
     console.log("useEffect - componentDidMount");
@@ -49,7 +54,7 @@ const Lotto = () => {
     };
   }, [timeouts.current]);
 
-  const onClickRedo = () => {
+  const onClickRedo = useCallback(() => {
     console.log("onClickRedo");
     setWinNumbers(getWinNumbers());
     setWinBalls([]);
@@ -57,7 +62,7 @@ const Lotto = () => {
     setRedo(true);
 
     timeouts.current = [];
-  };
+  }, [winNumbers]);
 
   return (
     <>
